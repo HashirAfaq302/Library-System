@@ -1,0 +1,47 @@
+{% extends "layout.twig" %}
+{% set isEdit = (mode == 'edit') %}
+{% block title %}{{ isEdit ? 'Edit book' : 'Add book' }} · {{ app.name }}{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <h1 class="h4 mb-0">{{ isEdit ? 'Edit book' : 'Add book' }}</h1>
+    <a class="btn btn-outline-secondary" href="{{ app.base_url }}/public/books">Back</a>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <form method="post" action="{{ isEdit ? (app.base_url ~ '/public/books/' ~ book.id ~ '/edit') : (app.base_url ~ '/public/books/new') }}" class="row g-3">
+        {{ csrf_field() }}
+        <div class="col-md-6">
+          <label class="form-label">Title</label>
+          <input name="title" value="{{ book.title }}" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Author</label>
+          <input name="author" value="{{ book.author }}" class="form-control" required>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label">Genre</label>
+          <input name="genre" value="{{ book.genre }}" class="form-control" placeholder="Sci-Fi" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">Published year</label>
+          <input name="published_year" value="{{ book.published_year }}" class="form-control" type="number" min="1000" max="2100" required>
+        </div>
+        <div class="col-md-3">
+          <label class="form-label">ISBN (optional)</label>
+          <input name="isbn" value="{{ book.isbn }}" class="form-control">
+        </div>
+        <div class="col-12">
+          <label class="form-label">Description (optional)</label>
+          <textarea name="description" class="form-control" rows="4">{{ book.description }}</textarea>
+        </div>
+        <div class="col-12 d-flex gap-2">
+          <button class="btn btn-primary" type="submit">{{ isEdit ? 'Save changes' : 'Add book' }}</button>
+          <a class="btn btn-outline-secondary" href="{{ app.base_url }}/public/books">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+

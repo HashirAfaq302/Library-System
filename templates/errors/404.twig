@@ -1,0 +1,7 @@
+{% extends "layout.twig" %}
+{% block title %}Not found · {{ app.name }}{% endblock %}
+{% block content %}
+  <div class="alert alert-warning">Page not found.</div>
+  <a class="btn btn-outline-primary" href="{{ app.base_url }}/public/books">Go to books</a>
+{% endblock %}
+

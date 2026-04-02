@@ -1,0 +1,35 @@
+{% extends "layout.twig" %}
+{% block title %}{{ book.title }} · {{ app.name }}{% endblock %}
+
+{% block content %}
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <h1 class="h4 mb-1">{{ book.title }}</h1>
+      <div class="text-muted">{{ book.author }} · {{ book.genre }} · {{ book.published_year }}</div>
+    </div>
+    <div class="d-flex gap-2">
+      <a class="btn btn-outline-secondary" href="{{ app.base_url }}/public/books">Back</a>
+      {% if can_edit %}
+        <a class="btn btn-outline-primary" href="{{ app.base_url }}/public/books/{{ book.id }}/edit">Edit</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <dl class="row mb-0">
+        <dt class="col-sm-3">ISBN</dt>
+        <dd class="col-sm-9">{{ book.isbn ?: '—' }}</dd>
+        <dt class="col-sm-3">Description</dt>
+        <dd class="col-sm-9">{{ book.description ?: '—' }}</dd>
+      </dl>
+      {% if can_edit %}
+        <hr>
+        <form method="post" action="{{ app.base_url }}/public/books/{{ book.id }}/delete" onsubmit="return confirm('Delete this book?')">
+          {{ csrf_field() }}
+          <button class="btn btn-danger" type="submit">Delete</button>
+        </form>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

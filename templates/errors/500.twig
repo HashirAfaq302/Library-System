@@ -1,0 +1,12 @@
+{% extends "layout.twig" %}
+{% block title %}Error · {{ app.name }}{% endblock %}
+{% block content %}
+  <div class="alert alert-danger">{{ message }}</div>
+  <div class="text-muted small">If this happens on mi-linux, check environment variables and database access.</div>
+  {% if app.debug and exception %}
+    <hr>
+    <div class="small">
+      <div><strong>Debug:</strong> {{ exception.message }}</div>
+    </div>
+  {% endif %}
+{% endblock %}

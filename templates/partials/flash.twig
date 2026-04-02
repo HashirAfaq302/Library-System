@@ -1,0 +1,9 @@
+{% set success = flash_get('success') %}
+{% set error = flash_get('error') %}
+{% if success %}
+  <div class="alert alert-success">{{ success }}</div>
+{% endif %}
+{% if error %}
+  <div class="alert alert-danger">{{ error }}</div>
+{% endif %}
+

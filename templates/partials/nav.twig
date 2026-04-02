@@ -1,0 +1,22 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+  <div class="container container-narrow">
+    <a class="navbar-brand" href="{{ app.base_url }}/public/books">{{ app.name }}</a>
+    <div class="ms-auto d-flex gap-2 align-items-center">
+      {% set p = route.path|default('') %}
+      {% set is_my = p starts with '/my-books' %}
+      {% set is_browse = (p starts with '/books') %}
+
+      <a class="btn btn-sm {{ is_browse ? 'btn-light' : 'btn-outline-light' }}" href="{{ app.base_url }}/public/books" {{ is_browse ? 'aria-current="page"' : '' }}>Browse</a>
+      {% if auth.user %}
+        <a class="btn btn-sm {{ is_my ? 'btn-light' : 'btn-outline-light' }}" href="{{ app.base_url }}/public/my-books" {{ is_my ? 'aria-current="page"' : '' }}>My books</a>
+        <form method="post" action="{{ app.base_url }}/public/logout" class="d-inline" onsubmit="return confirm('Logout?')">
+          {{ csrf_field() }}
+          <button class="btn btn-sm btn-outline-light" type="submit">Logout ({{ auth.user.username }})</button>
+        </form>
+      {% else %}
+        <a class="btn btn-sm btn-light" href="{{ app.base_url }}/public/login">Login</a>
+        <a class="btn btn-sm btn-outline-light" href="{{ app.base_url }}/public/register">Register</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>

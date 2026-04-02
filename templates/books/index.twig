@@ -1,0 +1,85 @@
+{% extends "layout.twig" %}
+{% block title %}Books · {{ app.name }}{% endblock %}
+
+{% block content %}
+  {% set isMine = (mode ?? 'browse') == 'mine' %}
+
+  <div class="d-flex align-items-center justify-content-between mb-3">
+    <div>
+      <div class="text-muted small">{{ isMine ? 'Manage only your own books (edit/delete).' : 'Public catalog (read/search for everyone).' }}</div>
+    </div>
+    {% if auth.user %}
+      <a class="btn btn-primary" href="{{ app.base_url }}/public/books/new">Add book</a>
+    {% endif %}
+  </div>
+
+  <div class="card shadow-sm mb-3">
+    <div class="card-body">
+      <form class="row g-3" method="get" action="{{ action ?? (app.base_url ~ '/public/books') }}">
+        <div class="col-md-6 typeahead">
+          <label class="form-label">Title</label>
+          <input name="title" value="{{ filters.title }}" class="form-control" placeholder="e.g. Dune" data-suggest-field="title" data-suggest-list="titleList" data-suggest-mine="{{ isMine ? '1' : '0' }}" autocomplete="off">
+          <div id="titleList" class="typeahead-list d-none"></div>
+        </div>
+        <div class="col-md-6 typeahead">
+          <label class="form-label">Author</label>
+          <input name="author" value="{{ filters.author }}" class="form-control" placeholder="e.g. Frank Herbert" data-suggest-field="author" data-suggest-list="authorList" data-suggest-mine="{{ isMine ? '1' : '0' }}" autocomplete="off">
+          <div id="authorList" class="typeahead-list d-none"></div>
+        </div>
+        <div class="col-md-4 typeahead">
+          <label class="form-label">Genre</label>
+          <input name="genre" value="{{ filters.genre }}" class="form-control" placeholder="e.g. Sci-Fi" data-suggest-field="genre" data-suggest-list="genreList" data-suggest-mine="{{ isMine ? '1' : '0' }}" autocomplete="off">
+          <div id="genreList" class="typeahead-list d-none"></div>
+        </div>
+        <div class="col-md-4">
+          <label class="form-label">Published year</label>
+          <input name="year" value="{{ filters.year }}" class="form-control" type="number" min="1000" max="2100" placeholder="e.g. 2023">
+        </div>
+        <div class="col-md-4 d-flex align-items-end gap-2">
+          <button class="btn btn-outline-primary w-100" type="submit">Search</button>
+          <a class="btn btn-outline-secondary" href="{{ action ?? (app.base_url ~ '/public/books') }}">Reset</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="table-responsive">
+      <table class="table table-striped mb-0">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Author</th>
+            <th>Genre</th>
+            <th>Year</th>
+            <th>Owner</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in books %}
+            <tr>
+              <td><a href="{{ app.base_url }}/public/books/{{ b.id }}">{{ b.title }}</a></td>
+              <td>{{ b.author }}</td>
+              <td>{{ b.genre }}</td>
+              <td>{{ b.published_year }}</td>
+              <td>{{ b.owner_username ?: '—' }}</td>
+              <td class="text-end">
+                <a class="btn btn-sm btn-outline-secondary" href="{{ app.base_url }}/public/books/{{ b.id }}">View</a>
+                {% if b.can_edit %}
+                  <a class="btn btn-sm btn-outline-primary" href="{{ app.base_url }}/public/books/{{ b.id }}/edit">Edit</a>
+                  <form method="post" action="{{ app.base_url }}/public/books/{{ b.id }}/delete" class="d-inline" onsubmit="return confirm('Delete this book?')">
+                    {{ csrf_field() }}
+                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                  </form>
+                {% endif %}
+              </td>
+            </tr>
+          {% else %}
+            <tr><td colspan="6" class="text-muted">No results.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+{% endblock %}

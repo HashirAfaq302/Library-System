@@ -1,0 +1,42 @@
+﻿{% extends "layout.twig" %}
+{% block title %}Register Â· {{ app.name }}{% endblock %}
+{% block body_class %}auth-bg{% endblock %}
+{% block main_class %}auth-main{% endblock %}
+
+
+{% block content %}
+  <div class="card shadow-lg auth-card">
+    <div class="card-body">
+      <h1 class="h4 mb-3">Register</h1>
+      <form method="post" action="{{ app.base_url }}/public/register" class="vstack gap-3">
+        {{ csrf_field() }}
+        <div>
+          <label class="form-label">Username</label>
+          <input name="username" class="form-control" autocomplete="username" required>
+          <div class="form-text">3â€“100 chars: letters, numbers, <code>_ . -</code></div>
+        </div>
+        <div>
+          <label class="form-label">Password</label>
+          <input name="password" type="password" class="form-control" autocomplete="new-password" required>
+          <div class="form-text">Minimum 8 characters. Passwords are stored using hashing.</div>
+        </div>
+        <div>
+          <label class="form-label">Confirm password</label>
+          <input name="password_confirm" type="password" class="form-control" autocomplete="new-password" required>
+        </div>
+        <div>
+          <label class="form-label">Captcha: {{ captcha_question() }}</label>
+          <input name="captcha" class="form-control" inputmode="numeric" required>
+        </div>
+        <div class="d-flex gap-2">
+          <button class="btn btn-primary" type="submit">Create account</button>
+          <a class="btn btn-outline-secondary" href="{{ app.base_url }}/public/login">Back to login</a>
+        </div>
+      </form>
+    </div>
+  </div>
+{% endblock %}
+
+
+
+
